@@ -3,7 +3,7 @@ module Lita
     class Log < Handler
       route(/Finished.*production/, 
         :add_log,
-        :help: {
+        :help {
           'Finished something to production' => 'Lita add it to log'
         }
       )
