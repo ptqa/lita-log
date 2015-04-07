@@ -9,12 +9,19 @@
 <script src="http://cdn.jsdelivr.net/bootstrap/3.3.4/js/npm.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.1/jquery.timeago.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.1/jquery.timeago.min.js"></script>
 <script>
   $(function() {
         $('.table-hover tr').click(function() {
             window.document.location = $(this).data("href");
         });
   });
+</script>
+<script>
+jQuery(document).ready(function() {
+  jQuery("time.timeago").timeago();
+});
 </script>
 </head>
   <body>
@@ -54,7 +61,7 @@
 		  <% color = 'warning' if params['claimer'] %>
 		  <tr data-href='<%= env %>/current' class="<%=color%>">
 		    <td><%= env %></td>
-		    <td><%="#{params['project']} #{Time.at(params['timestamp'])}" %></td>
+		    <td><%= params['project'] %> <time class="timeago" datetime="<%= Time.at(params["timestamp"]) %>"></time></td>
 		    <td><%= params['claimer'] %></td>
 		  </tr>
                   <% end %>
@@ -72,7 +79,8 @@
                 </div>
                 <% @variables[:ops_log].reverse.each do |log| %>
                 <div class="panel-body">
-                  <%= "#{Time.at(log["timestamp"])} #{log["user"]} : #{log["msg"]} " %>
+		  <time class="timeago" datetime="<%= Time.at(log["timestamp"]) %>"></time>
+                  <%= "#{log["user"]} : #{log["msg"]} " %>
                 </div>
                 <% end if @variables[:ops_log]%>
               </div>
