@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
             <div class="bs-component">
               <table class="table table-striped table-hover ">
                 <thead>
-                  <tr>
+                  <tr data-href='.'>
                     <th>Environment</th>
                     <th>Last deploy</th>
                     <th>Claimed</th>
@@ -71,19 +71,27 @@ jQuery(document).ready(function() {
           </div>
           <div class="col-lg-12 col-lg-offset-0">
             <div class="page-header">
-              <h1 id="tables">Ops logs</h1>
+              <h1 id="logss">Ops logs</h1>
             </div>
-             <div class="panel panel-primary">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Latest changes from DevOps team</h3>
-                </div>
+            <div class="bs-component">
+              <table class="table table-striped table-hover ">
+                <thead>
+                  <tr data-href='.'>
+                    <th>Time</th>
+                    <th>CoolAdmin</th>
+                    <th>Message</th>
+                  </tr>
+                </thead>
+                <tbody>
                 <% @variables[:ops_log].reverse.each do |log| %>
-                <div class="panel-body">
-		  <time class="timeago" datetime="<%= Time.at(log["timestamp"]) %>"></time>
-                  <%= "#{log["user"]} : #{log["msg"]} " %>
-                </div>
+                <tr>
+		  <td><time class="timeago" datetime="<%= Time.at(log["timestamp"]) %>"/></td>
+                  <td><%= log["user"] %></td>
+                  <td><%= log["msg"] %></td>
+                </tr>
                 <% end if @variables[:ops_log]%>
-              </div>
+                </tbody>
+              </table>
          </div>
         </div>
       </div>
