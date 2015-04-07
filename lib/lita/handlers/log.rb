@@ -19,9 +19,9 @@ module Lita
         }
       )
 
-      route(
-        /^log\s.*$/,
+      route( %r{^log\s.*$}i,
         :add_ops_log,
+        command: true,
         help: {
           'log' => 'Add message to lita'
         }
@@ -73,7 +73,8 @@ module Lita
       
       def add_ops_log (response)
         self.ops_log = [] unless self.ops_log
-        msg = response.message.body.split("lita log ").last
+        cut = response.message.body.size-4
+        msg = response.message.body[-cut..-1]
         self.ops_log << {timestamp: Time.now.to_i, user: response.user.name, msg: msg}
         response.reply("#{response.user.name}, ok saved to log.")
         save_ops_log()

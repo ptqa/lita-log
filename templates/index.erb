@@ -68,13 +68,13 @@
             </div>
              <div class="panel panel-info">
                 <div class="panel-heading">
-                  <h3 class="panel-title">Latest changes of DevOps team</h3>
+                  <h3 class="panel-title">Latest changes from DevOps team</h3>
                 </div>
                 <% @variables[:ops_log].reverse.each do |log| %>
                 <div class="panel-body">
                   <%= "#{Time.at(log["timestamp"])} #{log["user"]} : #{log["msg"]} " %>
                 </div>
-                <% end %>
+                <% end if @variables[:ops_log]%>
               </div>
          </div>
         </div>
