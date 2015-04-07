@@ -48,7 +48,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @variables.each do |env,params| %>
+                  <% @variables[:envs].each do |env,params| %>
 		  <% color = 'active' %>
 		  <% color = 'success' if env =~ /production|staging/ %>
 		  <% color = 'warning' if params['claimer'] %>
@@ -62,6 +62,21 @@
               </table> 
             </div>
           </div>
+          <div class="col-lg-12 col-lg-offset-0">
+            <div class="page-header">
+              <h1 id="tables">Ops logs</h1>
+            </div>
+             <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Latest changes of DevOps team</h3>
+                </div>
+                <% @variables[:ops_log].reverse.each do |log| %>
+                <div class="panel-body">
+                  <%= "#{Time.at(log["timestamp"])} #{log["user"]} : #{log["msg"]} " %>
+                </div>
+                <% end %>
+              </div>
+         </div>
         </div>
       </div>
    </div>

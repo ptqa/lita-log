@@ -6,6 +6,7 @@ module Lita
       config :env_list, default: ['production']
 
       attr_accessor :data
+      attr_accessor :ops_log
 
       http.get "/:env/current", :env_current
       http.get "/", :all_current
@@ -18,11 +19,20 @@ module Lita
         }
       )
 
+      route(
+        /^log\s.*$/,
+        :add_ops_log,
+        help: {
+          'log' => 'Add message to lita'
+        }
+      )
+
       def initialize(robot)
         super
         self.data = {}
         check_dir()
         load_data()
+        load_ops_log()
       end
 
       def check_dir()
@@ -32,9 +42,15 @@ module Lita
       def load_data()
         Dir.foreach(config.data_dir) do |file|
           next unless file =~ /.json/
+          next if file =~ /ops_log/
           env = file.chomp('.json')
           self.data[env] = JSON.parse(IO.read("#{config.data_dir}/#{file}")) if File.exist?("#{config.data_dir}/#{file}")
         end
+      end
+      
+      def load_ops_log()
+        return unless File.exist?("#{config.data_dir}/ops_log.json")
+        self.ops_log = JSON.parse(IO.read("#{config.data_dir}/ops_log.json"))
       end
 
       def save_data()
@@ -44,10 +60,23 @@ module Lita
         end
       end
 
+      def save_ops_log()
+        filename = "#{config.data_dir}/ops_log.json"
+        File.write(filename, self.ops_log.to_json)
+      end
+
       def save_env(env, hash)
         self.data[env] = [] unless self.data[env]
         self.data[env] << hash
         save_data()
+      end
+      
+      def add_ops_log (response)
+        self.ops_log = [] unless self.ops_log
+        msg = response.message.body.split("lita log ").last
+        self.ops_log << {timestamp: Time.now.to_i, user: response.user.name, msg: msg}
+        response.reply("#{response.user.name}, ok saved to log.")
+        save_ops_log()
       end
 
       def add_log (response)
@@ -81,7 +110,7 @@ module Lita
         self.data.each_key do |env|
           all[env] = env_latest(env)
         end
-        html = render_template("index", variables: all)
+        html = render_template("index", variables: { envs: all, ops_log: self.ops_log } )
         response.body << html
       end 
 
