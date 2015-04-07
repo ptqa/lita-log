@@ -7,11 +7,12 @@ module Lita
 
       attr_accessor :data
 
-#      http.get "/:env/current", :env_current
+      http.get "/:env/current", :env_current
       http.get "/", :all_current
 
-      route(/Finished deploying.*/,
+      route(/Finished deploying/,
         :add_log,
+        command: false,
         help: {
           'Finished deploying something to env' => 'Lita add it to log'
         }
@@ -32,7 +33,7 @@ module Lita
         Dir.foreach(config.data_dir) do |file|
           next unless file =~ /.json/
           env = file.chomp('.json')
-          self.data[env] = JSON.parse(IO.read("#{config.data_dir}/#{file}"))
+          self.data[env] = JSON.parse(IO.read("#{config.data_dir}/#{file}")) if File.exist?("#{config.data_dir}/#{file}")
         end
       end
 
@@ -40,7 +41,6 @@ module Lita
         self.data.each do |env, data|
           filename = "#{config.data_dir}/#{env}.json"
           File.write(filename, self.data[env].to_json)
-          puts "#{env} found and saved to #{filename}"
         end
       end
 
@@ -62,11 +62,18 @@ module Lita
           commit = params[1]
         end
         env = params.last.chop!
+        puts "Saving env #{env} log to file"
         save_env(env,{ timestamp: Time.now.to_i, user: user, project: project, commit: commit })
       end
 
+      def env_claimer (env)
+        return Claim.read(env)
+      end
+
       def env_latest (env)
-        return self.data[env].last
+        last_env = self.data[env].last
+        last_env['claimer'] = env_claimer(env)
+        last_env
       end
 
       def all_current (request, response)
@@ -80,12 +87,8 @@ module Lita
 
       def env_current (request, response)
         env = request.env['router.params'][:env]
-        html = render_template("index")
-        if self.data[env]
-          response.body << html
-        else
-          response.body << "Nothing on #{env} yet."
-        end
+        html = render_template("env", variables: {env => self.data[env]})
+        response.body << html
       end 
     end
     Lita.register_handler(Log)
