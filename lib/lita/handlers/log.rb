@@ -7,7 +7,8 @@ module Lita
 
       attr_accessor :data
 
-      http.get "/:env/current", :env_current
+#      http.get "/:env/current", :env_current
+      http.get "/", :all_current
 
       route(/Finished deploying.*/,
         :add_log,
@@ -64,16 +65,29 @@ module Lita
         save_env(env,{ timestamp: Time.now.to_i, user: user, project: project, commit: commit })
       end
 
+      def env_latest (env)
+        return self.data[env].last
+      end
+
+      def all_current (request, response)
+        all = {}
+        self.data.each_key do |env|
+          all[env] = env_latest(env)
+        end
+        html = render_template("index", variables: all)
+        response.body << html
+      end 
+
       def env_current (request, response)
         env = request.env['router.params'][:env]
+        html = render_template("index")
         if self.data[env]
-          response.body << "Latest data for #{env}: #{self.data[env].last}"
+          response.body << html
         else
-          response.body << "Nothing on #{request.env['router.params'][:env]} yet."
+          response.body << "Nothing on #{env} yet."
         end
       end 
     end
-
     Lita.register_handler(Log)
   end
 end
