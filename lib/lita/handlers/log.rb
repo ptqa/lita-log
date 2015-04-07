@@ -44,13 +44,13 @@ module Lita
           next unless file =~ /.json/
           next if file =~ /ops_log/
           env = file.chomp('.json')
-          self.data[env] = JSON.parse(IO.read("#{config.data_dir}/#{file}")) if File.exist?("#{config.data_dir}/#{file}")
+          self.data[env] = JSON.parse(IO.read("#{config.data_dir}/#{file}", :encoding => 'utf-8')) if File.exist?("#{config.data_dir}/#{file}")
         end
       end
       
       def load_ops_log()
         return unless File.exist?("#{config.data_dir}/ops_log.json")
-        self.ops_log = JSON.parse(IO.read("#{config.data_dir}/ops_log.json"))
+        self.ops_log = JSON.parse(IO.read("#{config.data_dir}/ops_log.json", :encoding => 'utf-8'))
       end
 
       def save_data()
