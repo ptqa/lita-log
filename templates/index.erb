@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
             <div class="bs-component">
               <table class="table table-striped table-hover ">
                 <thead>
-                  <tr data-href='.'>
+                  <tr data-href='#'>
                     <th>Environment</th>
                     <th>Last deploy</th>
                     <th>Claimed</th>
@@ -76,15 +76,15 @@ jQuery(document).ready(function() {
             <div class="bs-component">
               <table class="table table-striped table-hover ">
                 <thead>
-                  <tr data-href='.'>
+                  <tr data-href='#'>
                     <th>Time</th>
-                    <th>CoolAdmin</th>
+                    <th>Awesome Admin</th>
                     <th>Message</th>
                   </tr>
                 </thead>
                 <tbody>
                 <% @variables[:ops_log].reverse.each do |log| %>
-                <tr>
+                <tr data-href='#'>
 		  <td><time class="timeago" datetime="<%= Time.at(log["timestamp"]) %>"/></td>
                   <td><%= log["user"] %></td>
                   <td><%= log["msg"] %></td>
