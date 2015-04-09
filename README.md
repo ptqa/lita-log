@@ -1,19 +1,7 @@
 # lita-log
 
-TODO: Add a description of the plugin.
-
-## Installation
-
-Add lita-log to your Lita instance's Gemfile:
-
-``` ruby
-gem "lita-log"
-```
-
-## Configuration
-
-TODO: Describe any configuration attributes the plugin exposes.
+OneTwoTrip related lita handler.
 
 ## Usage
 
-TODO: Describe the plugin's features and how to use them.
+Do not even try.
