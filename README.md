@@ -1,6 +1,6 @@
 # lita-log
 
-OneTwoTrip related lita handler.
+Twiket related lita handler.
 
 ## Usage
 
