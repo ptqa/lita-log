@@ -68,13 +68,13 @@ module Lita
       end
 
       def save_env(env, hash)
-        self.data[env] = [] unless self.data[env]
+        self.data[env] ||= []
         self.data[env] << hash
         save_data
       end
 
       def add_ops_log(response)
-        self.ops_log = [] unless self.ops_log
+        self.ops_log ||= []
         cut = response.message.body.size - 4
         msg = response.message.body[-cut..-1]
         self.ops_log << { timestamp: Time.now.to_i, user: response.user.name, msg: msg }
