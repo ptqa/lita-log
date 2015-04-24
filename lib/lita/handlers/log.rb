@@ -96,7 +96,7 @@ module Lita
           commit = params[1]
         end
         env = params.last.chop!
-        save_env(env,
+        save_env(env, msg: msg,
                  environment: env, timestamp: Time.now.to_i,
                  user: user, project: project, commit: commit)
       end
