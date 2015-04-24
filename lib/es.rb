@@ -19,7 +19,7 @@ class ES
     end
 
     def put(msg, tags)
-      msg[:_timestamp] = timestamp
+      msg[:@timestamp] = timestamp
       msg[:tags] = tags
       msg = {
         index: index_name,
