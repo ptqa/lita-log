@@ -1,11 +1,6 @@
-
 class ES
-
   class << self
-
-    
     def timestamp
-      #Time.now.utc.iso8601
       Time.now.utc.getlocal.iso8601
     end
 
@@ -36,6 +31,5 @@ class ES
     def es
       @client ||= Elasticsearch::Client.new url: '127.1:9200', log: true
     end
-
   end
 end
