@@ -1,15 +1,15 @@
-require "lita"
-require "claim"
-require "elasticsearch"
-require "es"
+require 'lita'
+require 'claim'
+require 'elasticsearch'
+require 'es'
 
 Lita.load_locales Dir[File.expand_path(
-  File.join("..", "..", "locales", "*.yml"), __FILE__
+  File.join('..', '..', 'locales', '*.yml'), __FILE__
 )]
 
-require "lita/handlers/log"
+require 'lita/handlers/log'
 
 Lita::Handlers::Log.template_root File.expand_path(
-  File.join("..", "..", "templates"),
+  File.join('..', '..', 'templates'),
  __FILE__
 )

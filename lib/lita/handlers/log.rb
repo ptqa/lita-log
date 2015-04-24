@@ -62,24 +62,26 @@ module Lita
         end
       end
 
-      def save_ops_log
+      def save_ops_log(hash)
+        self.ops_log ||= []
+        self.ops_log << hash
         filename = "#{config.data_dir}/ops_log.json"
         File.write(filename, self.ops_log.to_json)
+        ES.put(hash, 'ops_log')
       end
 
       def save_env(env, hash)
         self.data[env] ||= []
         self.data[env] << hash
         save_data
+        ES.put(hash, 'deploy')
       end
 
       def add_ops_log(response)
-        self.ops_log ||= []
         cut = response.message.body.size - 4
         msg = response.message.body[-cut..-1]
-        self.ops_log << { timestamp: Time.now.to_i, user: response.user.name, msg: msg }
         response.reply("#{response.user.name}, ok saved to log.")
-        save_ops_log
+        save_ops_log(timestamp: Time.now.to_i, user: response.user.name, msg: msg)
       end
 
       def add_log(response)
@@ -94,7 +96,9 @@ module Lita
           commit = params[1]
         end
         env = params.last.chop!
-        save_env(env, timestamp: Time.now.to_i, user: user, project: project, commit: commit)
+        save_env(env,
+                 environment: env, timestamp: Time.now.to_i,
+                 user: user, project: project, commit: commit)
       end
 
       def env_claimer(env)
