@@ -1,7 +1,12 @@
+
 class ES
+
   class << self
+
+    
     def timestamp
-      Time.now.utc.iso8601
+      #Time.now.utc.iso8601
+      Time.now.utc.getlocal.iso8601
     end
 
     def type_name
@@ -13,8 +18,9 @@ class ES
       'logstash-' + (Time.now.strftime '%Y.%m.%d')
     end
 
-    def put(msg)
-      msg[:'@timestamp'] = timestamp
+    def put(msg, tags)
+      msg[:_timestamp] = timestamp
+      msg[:tags] = tags
       msg = {
         index: index_name,
         type: type_name,
@@ -28,7 +34,8 @@ class ES
     end
 
     def es
-      @client ||= Elasticsearch::Client.new url: '127.1:9200'
+      @client ||= Elasticsearch::Client.new url: '127.1:9200', log: true
     end
+
   end
 end
