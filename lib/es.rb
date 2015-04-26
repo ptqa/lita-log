@@ -1,3 +1,4 @@
+# Singleton for accessing ElasticSearch
 class ES
   class << self
     def timestamp

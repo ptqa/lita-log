@@ -1,3 +1,4 @@
+# Singleton for accessing redis
 class Claim
   REDIS_NAMESPACE = 'handlers:claims'
   REDIS_KEY = 'claim'
