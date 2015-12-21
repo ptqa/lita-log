@@ -59,17 +59,17 @@ jQuery(document).ready(function() {
                 <tbody>
                   <% sorted_envs = @variables[:envs].sort_by {|_,v| -v['timestamp']} %>
                   <% sorted_envs.map do |env,params| %>
-		  <% color = 'active' %>
-		  <% color = 'success' if env =~ /production|staging/ %>
-		  <% color = 'warning' if params['claimer'] %>
-		  <tr data-href='<%= env %>/current' class="<%=color%>">
-		    <td><%= env %></td>
-		    <td><%= params['project'] %> <time class="timeago" datetime="<%= Time.at(params['timestamp']) %>"/></td>
-		    <td><%= params['claimer'] %></td>
-		  </tr>
+                  <% color = 'active' %>
+                  <% color = 'success' if env =~ /production|staging/ %>
+                  <% color = 'warning' if params['claimer'] %>
+                  <tr data-href='<%= env %>/current' class="<%=color%>">
+                    <td><%= env %></td>
+                    <td><%= params['project'] %> <time class="timeago" datetime="<%= Time.at(params['timestamp']).iso8601 %>"/><%= Time.at(params['timestamp']).iso8601 %></td>
+                    <td><%= params['claimer'] %></td>
+                  </tr>
                   <% end %>
                 </tbody>
-              </table> 
+              </table>
             </div>
           </div>
           <div class="col-lg-12 col-lg-offset-0">
@@ -81,6 +81,7 @@ jQuery(document).ready(function() {
                 <thead>
                   <tr data-href='#'>
                     <th>Time</th>
+                    <th>Time Ago</th>
                     <th>Awesome Admin</th>
                     <th>Message</th>
                   </tr>
@@ -88,7 +89,7 @@ jQuery(document).ready(function() {
                 <tbody>
                 <% @variables[:ops_log].reverse.each do |log| %>
                 <tr data-href='#'>
-		  <td><time class="timeago" datetime="<%= Time.at(log['timestamp']) %>"/></td>
+                  <td><time class="timeago" datetime="<%= Time.at(log['timestamp']).iso8601 %>"/><%= Time.at(log['timestamp']).iso8601 %></td>
                   <td><%= log['user'] %></td>
                   <td><%= log['msg'] %></td>
                 </tr>
